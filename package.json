@@ -3,9 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/react": "^16.0.21",
+    "@types/react-dom": "^16.0.2",
+    "@types/react-redux": "^5.0.12",
+    "@types/redux-logger": "^3.0.5",
     "react": "^16.0.0",
+    "react-audio-player": "^0.6.2",
     "react-dom": "^16.0.0",
-    "react-scripts-ts": "2.8.0"
+    "react-redux": "^5.0.6",
+    "react-redux-typescript": "^2.3.0",
+    "react-scripts-ts": "2.8.0",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.2.0",
+    "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -17,6 +27,7 @@
     "@types/jest": "^21.1.5",
     "@types/node": "^8.0.50",
     "@types/react": "^16.0.21",
-    "@types/react-dom": "^16.0.2"
+    "@types/react-dom": "^16.0.2",
+    "@types/react-redux": "^5.0.12"
   }
 }

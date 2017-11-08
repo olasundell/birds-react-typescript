@@ -1,22 +1,46 @@
 import * as React from 'react';
 import './App.css';
+import BirdComponent from './components/BirdComponent';
+import { RandomBirdResponse } from './models/RandomBirdResponse';
+import { StoreState } from './reducers';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchRandomBird as fetchRandomBirdAction } from './actions/actions';
+import { LanguageComponent } from './components/LanguageComponent';
 
-const logo = require('./logo.svg');
+export interface AppProps {
+	isLoading: boolean;
+	response: RandomBirdResponse;
+	fetchRandomBird(): (dispatch: Dispatch<StoreState>) => Promise<RandomBirdResponse>;
+}
 
-class App extends React.Component {
+class App extends React.Component<AppProps> {
+	constructor(props: AppProps) {
+		super(props);
+		props.fetchRandomBird();
+	}
+
 	render() {
 		return (
-			<div className="App">
-				<div className="App-header">
-					<img src={logo} className="App-logo" alt="logo"/>
-					<h2>Welcome to React</h2>
-				</div>
-				<p className="App-intro">
-					To get started, edit <code>src/App.tsx</code> and save to reload.
-				</p>
+			<div>
+				<LanguageComponent />
+				<BirdComponent />
 			</div>
 		);
 	}
 }
 
-export default App;
+function mapStateToProps(state: StoreState) {
+	return {
+		isLoading: state.isLoading,
+		response: state.response
+	};
+}
+
+function mapDispatchToProps(dispatch: Dispatch<StoreState>) {
+	return {
+		fetchRandomBird: bindActionCreators(fetchRandomBirdAction, dispatch),
+	};
+}
+
+export default connect<{}, {}, AppProps>(mapStateToProps, mapDispatchToProps)(App) as React.ComponentClass<{}>;

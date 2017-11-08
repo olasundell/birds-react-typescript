@@ -1,0 +1,128 @@
+// import { Response } from '../models/Response';
+// import { Action } from '../actions/actions';
+
+// import { combineReducers } from 'redux';
+//
+// import { Action } from '../actions/actions';
+// import { Response } from '../models/Response';
+
+import { RandomBirdResponse } from '../models/RandomBirdResponse';
+
+import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
+
+import { combineReducers } from 'redux';
+import randomBirdResponse from './birdReducer';
+import { createLogger } from 'redux-logger';
+import languageReducer from './languageReducer';
+
+export interface StoreState {
+	isLoading: boolean;
+	response: RandomBirdResponse;
+}
+
+export const initialState: StoreState = {
+	isLoading: false,
+	response: {
+		genusBirds: [],
+		media: {
+			url: '',
+			mediaType: ''
+		},
+		actualBird: {
+			scientificName: '',
+			genusName: '',
+			name: ''
+		}
+	},
+};
+
+export const rootReducer = combineReducers<StoreState>({
+	randomBirdResponse,
+	languageReducer
+});
+
+export function configureStore() {
+	return createStore<StoreState>(
+		rootReducer,
+		applyMiddleware(thunk, createLogger())
+	);
+}
+
+// export namespace Store {
+//
+// 	export type All = {
+// 		response: Response,
+// 		isLoading: boolean,
+// 		error: string,
+// 	};
+// }
+
+// function isLoading (state: boolean = false, action: Action): boolean {
+// 	switch (action.type) {
+// 		case 'REQUEST_RANDOM_BIRD':
+// 			return true;
+// 		case 'RECEIVE_RANDOM_BIRD':
+// 			return false;
+// 		default:
+// 			return state;
+// 	}
+// }
+//
+// function error (state: string = '', action: Action): string {
+// 	switch (action.type) {
+// 		case 'RANDOM_BIRD_ERROR':
+// 			return action.error;
+// 		default:
+// 			return state;
+// 	}
+// }
+//
+// const initialState: Response = {
+// 	genusBirds: [],
+// 	media: {
+// 		url: '',
+// 		mediaType: ''
+// 	},
+// 	actualBird: {
+// 		scientificName: '',
+// 		genusName: '',
+// 		name: ''
+// 	}
+// };
+//
+// function receiveRandomBird(state: Response = initialState, action: Action): Response {
+// 	switch (action.type) {
+// 		case 'RECEIVE_RANDOM_BIRD':
+// 			return action.response;
+// 		default:
+// 			return state;
+// 	}
+// }
+//
+// export const reducers = combineReducers<Store.All>({
+// 	receiveRandomBird,
+// 	isLoading,
+// 	error,
+// });
+// export namespace Store {
+// 	export type StoredResponse = { response: Response };
+//
+// 	export type All = {
+// 		response: StoredResponse
+// 	};
+// }
+//
+// const initialState: Store.StoredResponse = {
+// 	response: null,
+// }
+//
+// function response(state: Store.StoredResponse = initialState, action: Action): Store.StoredResponse {
+// 	const { value } = state
+// 	switch (action.type) {
+// 		case 'RECEIVE_RANDOM_BIRD':
+//
+// 		default:
+// 			return state;
+// 	}
+// }
