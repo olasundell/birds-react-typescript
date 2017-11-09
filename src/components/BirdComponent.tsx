@@ -22,24 +22,94 @@ interface BirdComponentActions {
 		: (dispatch: Dispatch<StoreState>) => Promise<{}>;
 }
 
-interface BirdComponentParams extends BirdComponentProps, BirdComponentActions {}
+interface BirdComponentParams extends BirdComponentProps, BirdComponentActions {
+}
 
-class BirdComponent extends React.Component<BirdComponentParams, object> {
-	componentWillReceiveProps(nextProps: BirdComponentProps) {
+interface BirdComponentState {
+	correctIndex: number;
+	clicked: boolean;
+}
+
+class BirdComponent extends React.Component<BirdComponentParams, BirdComponentState> {
+	constructor(props: BirdComponentParams, state: BirdComponentState) {
+		super(props, state);
+		this.state = {
+			correctIndex: -1,
+			clicked: false,
+		};
+		this.correctAndClicked = this.correctAndClicked.bind(this);
+	}
+
+	componentWillReceiveProps(nextProps: BirdComponentParams) {
 		const languageChanged = nextProps.currentLanguage !== this.props.currentLanguage;
 		const regionChanged = nextProps.currentRegion !== this.props.currentRegion;
 
 		if (nextProps.response) {
+			const resp: BirdResponse = nextProps.response;
 			if (languageChanged) {
 				this.props.fetchSpecificBird(
 					nextProps.response.actualBird.scientificName,
 					nextProps.currentLanguage,
 					nextProps.currentRegion);
 			} else if (regionChanged) {
-				this.props.fetchRandomBird(this.props.currentLanguage, this.props.currentRegion);
+				this.props.fetchRandomBird(nextProps.currentLanguage, nextProps.currentRegion);
+			} else {
+				resp.genusBirds.forEach((bird, i) => {
+					if (bird.scientificName === resp.actualBird.scientificName) {
+						this.setState({correctIndex: i});
+					}
+				});
 			}
 		}
 	}
+
+	shouldComponentUpdate(nextProps: BirdComponentParams, nextState: BirdComponentState): boolean {
+		// console.log(`should update ${nextProps.clicked} ${JSON.stringify(nextState)}`);
+		// if (nextState && nextState.correctIndex) {
+		// 	if (!this.state || !this.state.correctIndex) {
+		// 		return false;
+		// 	} else if (this.state.correctIndex !== nextState.correctIndex) {
+		// 		return false;
+		// 	}
+		// }
+		return true;
+	}
+
+	onClick(event: React.MouseEvent<HTMLLIElement>, index: number) {
+		// const safeSearchTypeValue: string = event.currentTarget.value;
+
+		if (this.props.response) {
+			console.log('Clicked bird ' + this.props.response.genusBirds[index].scientificName);
+		}
+
+		if (this.state && this.state.clicked) {
+			this.setState({
+				clicked: false
+			});
+			this.props.fetchRandomBird(this.props.currentLanguage, this.props.currentRegion);
+		} else {
+			this.setState({
+				clicked: true
+			});
+			// this.setState((prevState, props) => {
+			// 	return {
+			// 		...props,
+			// 		clicked: true
+			// 	};
+			// });
+		}
+	}
+
+	correctAndClicked(index: number): string {
+		if (this.state && this.state.clicked) {
+			if (this.state.correctIndex === index) {
+				return 'correct';
+			}
+		}
+
+		return '';
+	}
+
 	render() {
 		const { response, isLoading } = this.props;
 
@@ -59,8 +129,7 @@ class BirdComponent extends React.Component<BirdComponentParams, object> {
 			<div>
 				<MediaComponent mediaType={response.media.mediaType} url={response.media.url}/>
 				<ul>
-					{response.genusBirds.map((b, i) => <li key={b.scientificName}>{b.name}</li>)}
-				</ul>
+					{response.genusBirds.map((b, i) => <li onClick={(e) => this.onClick(e, i)} key={i} className={this.correctAndClicked(i)}>{b.name}</li>)} </ul>
 			</div>
 		);
 	}

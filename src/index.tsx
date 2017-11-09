@@ -7,12 +7,6 @@ import { Provider } from 'react-redux';
 import { configureStore } from './reducers';
 // import 'bootstrap/dist/css/bootstrap.css';
 
-// let store: redux.Store<Store.All> = redux.createStore(
-// 	rootReducer,
-// 	{} as Store.All,
-// 	redux.applyMiddleware(thunk),
-// );
-
 const store = configureStore();
 
 ReactDOM.render(
