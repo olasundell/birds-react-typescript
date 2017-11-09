@@ -13,7 +13,7 @@ export class MediaComponent extends React.Component<Media, object> {
 
 		return (
 			<div>
-				<audio autoPlay>
+				<audio autoPlay={true}>
 					<source src={url}/>
 						Your browser does not support the audio element.
 				</audio>

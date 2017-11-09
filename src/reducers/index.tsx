@@ -14,14 +14,21 @@ import thunk from 'redux-thunk';
 import { combineReducers } from 'redux';
 import randomBirdResponse from './birdReducer';
 import { createLogger } from 'redux-logger';
-import languageReducer from './languageReducer';
+import languageResponse from './languageReducer';
+import { Language } from '../models/Language';
+import regionResponse from './regionReducer';
+import { Region } from '../models/Region';
 
 export interface StoreState {
 	isLoading: boolean;
 	response: RandomBirdResponse;
+	languages: Language[];
+	regions: Region[];
 }
 
 export const initialState: StoreState = {
+	languages: [],
+	regions: [],
 	isLoading: false,
 	response: {
 		genusBirds: [],
@@ -39,7 +46,8 @@ export const initialState: StoreState = {
 
 export const rootReducer = combineReducers<StoreState>({
 	randomBirdResponse,
-	languageReducer
+	languageResponse,
+	regionResponse
 });
 
 export function configureStore() {

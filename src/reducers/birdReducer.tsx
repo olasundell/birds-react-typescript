@@ -1,11 +1,11 @@
-import { Action } from '../actions/actions';
+import { Action, ActionTypeKeys } from '../actions/actions';
 import { initialState, StoreState } from './index';
-import {BirdComponentProps} from '../components/BirdComponent';
+import { BirdComponentProps } from '../components/BirdComponent';
 
 // const initialState: Response = {
 export default function randomBirdResponse(state: StoreState = initialState, action: Action): BirdComponentProps {
 	switch (action.type) {
-		case 'RECEIVE_RANDOM_BIRD':
+		case ActionTypeKeys.RECEIVE_RANDOM_BIRD:
 			// console.log('reducing random bird ' + JSON.stringify(action));
 			// return action.payload;
 
@@ -18,7 +18,7 @@ export default function randomBirdResponse(state: StoreState = initialState, act
 			// 	response: action.payload,
 			// 	isLoading: false,
 			// });
-		case 'REQUEST_RANDOM_BIRD':
+		case ActionTypeKeys.REQUEST_RANDOM_BIRD:
 			return Object.assign({}, state, {
 				isLoading: true,
 			});
