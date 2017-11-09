@@ -1,18 +1,45 @@
 import * as React from 'react';
-import { RandomBirdResponse } from '../models/RandomBirdResponse';
-import { connect } from 'react-redux';
+import { BirdResponse } from '../models/RandomBirdResponse';
+import { connect, Dispatch } from 'react-redux';
 import { MediaComponent } from './MediaComponent';
 import { Language } from '../models/Language';
 import { Region } from '../models/Region';
+import { StoreState } from '../reducers';
+import { bindActionCreators } from 'redux';
+import { fetchSpecificBird as fetchSpecificBirdAction,
+	fetchRandomBird as fetchRandomBirdAction } from '../actions/actions';
 
 export interface BirdComponentProps {
-	response?: RandomBirdResponse;
+	response?: BirdResponse;
 	currentLanguage: Language;
 	currentRegion: Region;
 	isLoading: boolean;
 }
 
-class BirdComponent extends React.Component<BirdComponentProps, object> {
+interface BirdComponentActions {
+	fetchRandomBird(selectedLanguage: Language, selectedRegion: Region): (dispatch: Dispatch<StoreState>) => Promise<{}>;
+	fetchSpecificBird(sciName: string, selectedLanguage: Language, selectedRegion: Region)
+		: (dispatch: Dispatch<StoreState>) => Promise<{}>;
+}
+
+interface BirdComponentParams extends BirdComponentProps, BirdComponentActions {}
+
+class BirdComponent extends React.Component<BirdComponentParams, object> {
+	componentWillReceiveProps(nextProps: BirdComponentProps) {
+		const languageChanged = nextProps.currentLanguage !== this.props.currentLanguage;
+		const regionChanged = nextProps.currentRegion !== this.props.currentRegion;
+
+		if (nextProps.response) {
+			if (languageChanged) {
+				this.props.fetchSpecificBird(
+					nextProps.response.actualBird.scientificName,
+					nextProps.currentLanguage,
+					nextProps.currentRegion);
+			} else if (regionChanged) {
+				this.props.fetchRandomBird(this.props.currentLanguage, this.props.currentRegion);
+			}
+		}
+	}
 	render() {
 		const { response, isLoading } = this.props;
 
@@ -39,14 +66,6 @@ class BirdComponent extends React.Component<BirdComponentProps, object> {
 	}
 }
 
-// <app-audio *ngIf="response.media.mediaType == 'AUDIO'" url="{{response.media.url}}"></app-audio>
-// {/*<ul>*/}
-// {/*<li id="{{g.scientificName}}"*/}
-// (click)="onSelect(g)"
-// [ngClass] = "{'correct': isCorrectAndClicked(g)}"
-// *ngFor="let g of response.genusBirds">{{g.name}}</li>
-// </ul>
-
 function mapStateToProps(state: any): BirdComponentProps {
 	return {
 		isLoading: state.randomBirdResponse.isLoading,
@@ -56,6 +75,13 @@ function mapStateToProps(state: any): BirdComponentProps {
 	};
 }
 
-export default connect(mapStateToProps)(BirdComponent);
+function mapDispatchToActions(dispatch: Dispatch<StoreState>): BirdComponentActions {
+	return {
+		fetchSpecificBird: bindActionCreators(fetchSpecificBirdAction, dispatch),
+		fetchRandomBird: bindActionCreators(fetchRandomBirdAction, dispatch),
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToActions)(BirdComponent);
 
 // helpers

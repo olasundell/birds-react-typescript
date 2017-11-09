@@ -1,7 +1,7 @@
 import { Bird } from './Bird';
 import { Media } from './Media';
 
-export interface RandomBirdResponse {
+export interface BirdResponse {
 	media: Media;
 	actualBird: Bird;
 	genusBirds: Bird[];

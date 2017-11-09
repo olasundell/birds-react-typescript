@@ -1,12 +1,12 @@
-import { RandomBirdResponse } from '../models/RandomBirdResponse';
+import { BirdResponse } from '../models/RandomBirdResponse';
 import { createActionCreator } from 'react-redux-typescript/module/create-action-creator';
 import { Dispatch } from 'react-redux';
 import { StoreState } from '../reducers';
-import { Language } from '../models/Language';
-import { Region } from '../models/Region';
+import {defaultLanguage, Language} from '../models/Language';
+import {defaultRegion, Region} from '../models/Region';
 
 // export const REQUEST_RANDOM_BIRD = 'REQUEST_RANDOM_BIRD';
-// export const RECEIVE_RANDOM_BIRD = 'RECEIVE_RANDOM_BIRD';
+// export const RECEIVE_BIRD = 'RECEIVE_BIRD';
 // export const RANDOM_BIRD_ERROR = 'RANDOM_BIRD_ERROR';
 //
 // export const REQUEST_LANGUAGES = 'REQUEST_LANGUAGES';
@@ -17,7 +17,8 @@ import { Region } from '../models/Region';
 
 export enum ActionTypeKeys {
 	REQUEST_RANDOM_BIRD = 'REQUEST_RANDOM_BIRD',
-	RECEIVE_RANDOM_BIRD = 'RECEIVE_RANDOM_BIRD',
+	REQUEST_SPECIFIC_BIRD = 'REQUEST_SPECIFIC_BIRD',
+	RECEIVE_BIRD = 'RECEIVE_BIRD',
 	RANDOM_BIRD_ERROR = 'RANDOM_BIRD_ERROR',
 
 	REQUEST_LANGUAGES = 'REQUEST_LANGUAGES',
@@ -31,7 +32,8 @@ export enum ActionTypeKeys {
 
 export const actionCreators = {
 	requestRandomBird: createActionCreator(ActionTypeKeys.REQUEST_RANDOM_BIRD),
-	receiveRandomBird: createActionCreator(ActionTypeKeys.RECEIVE_RANDOM_BIRD, (state: RandomBirdResponse) => {
+	requestSpecificBird: createActionCreator(ActionTypeKeys.REQUEST_SPECIFIC_BIRD),
+	receiveBird: createActionCreator(ActionTypeKeys.RECEIVE_BIRD, (state: BirdResponse) => {
 		return state;
 	}),
 	randomBirdError: createActionCreator(ActionTypeKeys.RANDOM_BIRD_ERROR),
@@ -47,14 +49,15 @@ export const actionCreators = {
 
 type S<T> = { response: T };
 
-type QRandomBirdResponse = S<{ randomBirdResponse: RandomBirdResponse }>;
+type QRandomBirdResponse = S<{ randomBirdResponse: BirdResponse }>;
 type QLanguagesResponse = S<{ languages: Language[] }>;
 type QLanguageResponse = S<{ currentLanguage: Language }>;
 type QRegionsResponse = S<{ regions: Region[] }>;
 type QRegionResponse = S<{ region: Region }>;
 
 export type Action = ({ type: ActionTypeKeys.REQUEST_RANDOM_BIRD }) |
-	({ type: ActionTypeKeys.RECEIVE_RANDOM_BIRD, payload: RandomBirdResponse} & QRandomBirdResponse) |
+	({ type: ActionTypeKeys.REQUEST_SPECIFIC_BIRD}) |
+	({ type: ActionTypeKeys.RECEIVE_BIRD, payload: BirdResponse} & QRandomBirdResponse) |
 	({ type: ActionTypeKeys.RANDOM_BIRD_ERROR, error: string }) |
 	({ type: ActionTypeKeys.REQUEST_LANGUAGES }) |
 	({ type: ActionTypeKeys.RECEIVE_LANGUAGES, payload: Language[] }  & QLanguagesResponse) |
@@ -64,12 +67,46 @@ export type Action = ({ type: ActionTypeKeys.REQUEST_RANDOM_BIRD }) |
 	({ type: ActionTypeKeys.SET_CURRENT_REGION, payload: Region}  & QRegionResponse)
 	;
 
-export function fetchRandomBird(): (dispatch: Dispatch<StoreState>) => Promise<{}> {
+function createUrl(selectedLanguage?: Language, selectedRegion?: Region, sciName?: string): string {
+	let url: URL = new URL('http://localhost:8080/random');
+	let params: URLSearchParams = url.searchParams;
+	// let params: URLSearchParams = new URLSearchParams();
+
+	let lang = selectedLanguage ? selectedLanguage : defaultLanguage;
+	let region = selectedRegion ? selectedRegion : defaultRegion;
+
+	params.set('lang', lang.code);
+	params.set('region', region.code);
+
+	if (sciName) {
+		params.set('name', sciName);
+	}
+
+	return url.toString();
+}
+
+export function fetchSpecificBird(sciName: string, selectedLanguage: Language, selectedRegion: Region):
+			(dispatch: Dispatch<StoreState>) => Promise<{}> {
+
+	console.log(`Fetching specific bird ${sciName}`);
+	return async (dispatch: Dispatch<StoreState>) => {
+		dispatch(actionCreators.requestSpecificBird());
+		let url: string = createUrl(selectedLanguage, selectedRegion, sciName);
+
+		return fetch(url)
+			.then(response => response.json())
+			.then(json => dispatch(actionCreators.receiveBird(json)));
+	};
+}
+
+export function fetchRandomBird(selectedLanguage: Language,
+								selectedRegion: Region): (dispatch: Dispatch<StoreState>) => Promise<{}> {
 	return async (dispatch: Dispatch<StoreState>) => {
 		dispatch(actionCreators.requestRandomBird());
-		return fetch('http://localhost:8080/random')
+		let url = createUrl(selectedLanguage, selectedRegion);
+		return fetch(url)
 			.then(response => response.json())
-			.then(json => dispatch(actionCreators.receiveRandomBird(json)));
+			.then(json => dispatch(actionCreators.receiveBird(json)));
 	};
 }
 
@@ -82,6 +119,12 @@ export function fetchLanguages(): (dispatch: Dispatch<StoreState>) => Promise<{}
 	};
 }
 
+export function setCurrentLanguage(language: Language): (dispatch: Dispatch<StoreState>) => Promise<{}> {
+	return async (dispatch: Dispatch<StoreState>) => {
+		return dispatch(actionCreators.setCurrentLanguage(language));
+	};
+}
+
 export function fetchRegions(): (dispatch: Dispatch<StoreState>) => Promise<{}> {
 	return async (dispatch: Dispatch<StoreState>) => {
 		dispatch(actionCreators.requestRegions());
@@ -91,8 +134,8 @@ export function fetchRegions(): (dispatch: Dispatch<StoreState>) => Promise<{}> 
 	};
 }
 
-export function setCurrentLanguage(language: Language): (dispatch: Dispatch<StoreState>) => Promise<{}> {
+export function setCurrentRegion(region: Region): (dispatch: Dispatch<StoreState>) => Promise<{}> {
 	return async (dispatch: Dispatch<StoreState>) => {
-		return dispatch(actionCreators.setCurrentLanguage(language));
+		return dispatch(actionCreators.setCurrentRegion(region));
 	};
 }

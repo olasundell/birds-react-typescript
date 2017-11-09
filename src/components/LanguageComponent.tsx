@@ -38,7 +38,7 @@ class LanguageComponent extends React.Component<LanguageComponentParams, object>
 
 		// console.log(event.currentTarget.value);
 
-		console.log(safeSearchTypeValue); // in chrome => B
+		// console.log(safeSearchTypeValue); // in chrome => B
 		const language = this.langMap.get(safeSearchTypeValue);
 
 		if (language) {

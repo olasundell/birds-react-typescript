@@ -6,7 +6,7 @@
 // import { Action } from '../actions/actions';
 // import { Response } from '../models/Response';
 
-import { RandomBirdResponse } from '../models/RandomBirdResponse';
+import { BirdResponse } from '../models/RandomBirdResponse';
 
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -23,7 +23,7 @@ export interface StoreState {
 	currentLanguage: Language;
 	currentRegion: Region;
 	isLoading: boolean;
-	response?: RandomBirdResponse;
+	response?: BirdResponse;
 	languages: Language[];
 	regions: Region[];
 }
@@ -63,7 +63,7 @@ export function configureStore() {
 // 	switch (action.type) {
 // 		case 'REQUEST_RANDOM_BIRD':
 // 			return true;
-// 		case 'RECEIVE_RANDOM_BIRD':
+// 		case 'RECEIVE_BIRD':
 // 			return false;
 // 		default:
 // 			return state;
@@ -94,7 +94,7 @@ export function configureStore() {
 //
 // function receiveRandomBird(state: Response = initialState, action: Action): Response {
 // 	switch (action.type) {
-// 		case 'RECEIVE_RANDOM_BIRD':
+// 		case 'RECEIVE_BIRD':
 // 			return action.response;
 // 		default:
 // 			return state;
@@ -121,7 +121,7 @@ export function configureStore() {
 // function response(state: Store.StoredResponse = initialState, action: Action): Store.StoredResponse {
 // 	const { value } = state
 // 	switch (action.type) {
-// 		case 'RECEIVE_RANDOM_BIRD':
+// 		case 'RECEIVE_BIRD':
 //
 // 		default:
 // 			return state;

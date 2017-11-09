@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import BirdComponent from './components/BirdComponent';
-import { RandomBirdResponse } from './models/RandomBirdResponse';
+import { BirdResponse } from './models/RandomBirdResponse';
 import { StoreState } from './reducers';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -16,8 +16,8 @@ import { Region } from './models/Region';
 
 export interface AppProps {
 	isLoading: boolean;
-	response: RandomBirdResponse;
-	fetchRandomBird(): (dispatch: Dispatch<StoreState>) => Promise<RandomBirdResponse>;
+	response: BirdResponse;
+	fetchRandomBird(): (dispatch: Dispatch<StoreState>) => Promise<BirdResponse>;
 	fetchLanguages(): (dispatch: Dispatch<StoreState>) => Promise<Language[]>;
 	fetchRegions(): (dispatch: Dispatch<StoreState>) => Promise<Region[]>;
 }
