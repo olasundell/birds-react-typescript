@@ -18,7 +18,7 @@ class RegionComponent extends React.Component<RegionComponentProps, object> {
 			<div>
 				Choose region:&nbsp;
 				<select>
-					{regions.map((l) => <option value={l.code}>{l.name}</option>)}
+					{regions.map((l) => <option key={l.code}>{l.name}</option>)}
 				</select>
 			</div>
 		);

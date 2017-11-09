@@ -22,9 +22,11 @@ export enum ActionTypeKeys {
 
 	REQUEST_LANGUAGES = 'REQUEST_LANGUAGES',
 	RECEIVE_LANGUAGES = 'RECEIVE_LANGUAGES',
+	SET_CURRENT_LANGUAGE = 'SET_CURRENT_LANGUAGE',
 
 	REQUEST_REGIONS = 'REQUEST_REGIONS',
 	RECEIVE_REGIONS = 'RECEIVE_REGIONS',
+	SET_CURRENT_REGION = 'SET_CURRENT_REGION',
 }
 
 export const actionCreators = {
@@ -36,24 +38,30 @@ export const actionCreators = {
 
 	requestLanguages: createActionCreator(ActionTypeKeys.REQUEST_LANGUAGES),
 	receiveLanguages: createActionCreator(ActionTypeKeys.RECEIVE_LANGUAGES, (state: Language[]) => { return state; }),
+	setCurrentLanguage: createActionCreator(ActionTypeKeys.SET_CURRENT_LANGUAGE, (state: Language) => { return state; }),
 
 	requestRegions: createActionCreator(ActionTypeKeys.REQUEST_REGIONS),
 	receiveRegions: createActionCreator(ActionTypeKeys.RECEIVE_REGIONS, (state: Region[]) => { return state; }),
+	setCurrentRegion: createActionCreator(ActionTypeKeys.SET_CURRENT_REGION, (state: Region) => { return state; })
 };
 
 type S<T> = { response: T };
 
 type QRandomBirdResponse = S<{ randomBirdResponse: RandomBirdResponse }>;
-type QLanguageResponse = S<{ regions: Language[] }>;
-type QRegionresponse = S<{ regions: Region[] }>;
+type QLanguagesResponse = S<{ languages: Language[] }>;
+type QLanguageResponse = S<{ currentLanguage: Language }>;
+type QRegionsResponse = S<{ regions: Region[] }>;
+type QRegionResponse = S<{ region: Region }>;
 
 export type Action = ({ type: ActionTypeKeys.REQUEST_RANDOM_BIRD }) |
 	({ type: ActionTypeKeys.RECEIVE_RANDOM_BIRD, payload: RandomBirdResponse} & QRandomBirdResponse) |
 	({ type: ActionTypeKeys.RANDOM_BIRD_ERROR, error: string }) |
 	({ type: ActionTypeKeys.REQUEST_LANGUAGES }) |
-	({ type: ActionTypeKeys.RECEIVE_LANGUAGES, payload: Language[] }  & QLanguageResponse) |
+	({ type: ActionTypeKeys.RECEIVE_LANGUAGES, payload: Language[] }  & QLanguagesResponse) |
+	({ type: ActionTypeKeys.SET_CURRENT_LANGUAGE, payload: Language }  & QLanguageResponse) |
 	({ type: ActionTypeKeys.REQUEST_REGIONS}) |
-	({ type: ActionTypeKeys.RECEIVE_REGIONS, payload: Region[]} & QRegionresponse)
+	({ type: ActionTypeKeys.RECEIVE_REGIONS, payload: Region[]} & QRegionsResponse) |
+	({ type: ActionTypeKeys.SET_CURRENT_REGION, payload: Region}  & QRegionResponse)
 	;
 
 export function fetchRandomBird(): (dispatch: Dispatch<StoreState>) => Promise<{}> {
@@ -80,5 +88,11 @@ export function fetchRegions(): (dispatch: Dispatch<StoreState>) => Promise<{}> 
 		return fetch('http://localhost:8080/regions')
 			.then(response => response.json())
 			.then(json => dispatch(actionCreators.receiveRegions(json)));
+	};
+}
+
+export function setCurrentLanguage(language: Language): (dispatch: Dispatch<StoreState>) => Promise<{}> {
+	return async (dispatch: Dispatch<StoreState>) => {
+		return dispatch(actionCreators.setCurrentLanguage(language));
 	};
 }

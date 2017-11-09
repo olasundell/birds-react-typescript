@@ -15,13 +15,15 @@ import { combineReducers } from 'redux';
 import randomBirdResponse from './birdReducer';
 import { createLogger } from 'redux-logger';
 import languageResponse from './languageReducer';
-import { Language } from '../models/Language';
+import { defaultLanguage, Language } from '../models/Language';
 import regionResponse from './regionReducer';
-import { Region } from '../models/Region';
+import { defaultRegion, Region } from '../models/Region';
 
 export interface StoreState {
+	currentLanguage: Language;
+	currentRegion: Region;
 	isLoading: boolean;
-	response: RandomBirdResponse;
+	response?: RandomBirdResponse;
 	languages: Language[];
 	regions: Region[];
 }
@@ -30,18 +32,9 @@ export const initialState: StoreState = {
 	languages: [],
 	regions: [],
 	isLoading: false,
-	response: {
-		genusBirds: [],
-		media: {
-			url: '',
-			mediaType: ''
-		},
-		actualBird: {
-			scientificName: '',
-			genusName: '',
-			name: ''
-		}
-	},
+	response: undefined,
+	currentLanguage: defaultLanguage,
+	currentRegion: defaultRegion,
 };
 
 export const rootReducer = combineReducers<StoreState>({

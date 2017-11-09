@@ -2,9 +2,13 @@ import * as React from 'react';
 import { RandomBirdResponse } from '../models/RandomBirdResponse';
 import { connect } from 'react-redux';
 import { MediaComponent } from './MediaComponent';
+import { Language } from '../models/Language';
+import { Region } from '../models/Region';
 
 export interface BirdComponentProps {
-	response: RandomBirdResponse;
+	response?: RandomBirdResponse;
+	currentLanguage: Language;
+	currentRegion: Region;
 	isLoading: boolean;
 }
 
@@ -43,10 +47,12 @@ class BirdComponent extends React.Component<BirdComponentProps, object> {
 // *ngFor="let g of response.genusBirds">{{g.name}}</li>
 // </ul>
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: any): BirdComponentProps {
 	return {
 		isLoading: state.randomBirdResponse.isLoading,
-		response: state.randomBirdResponse.response
+		response: state.randomBirdResponse.response,
+		currentLanguage: state.randomBirdResponse.currentLanguage,
+		currentRegion: state.randomBirdResponse.currentRegion
 	};
 }
 

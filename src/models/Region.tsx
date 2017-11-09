@@ -1,5 +1,9 @@
 export interface Region {
 	code: string;
 	name: string;
-	id: number;
 }
+
+export const defaultRegion: Region = {
+	code: '',
+	name: ''
+};

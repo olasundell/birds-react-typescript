@@ -6,21 +6,21 @@ import { BirdComponentProps } from '../components/BirdComponent';
 export default function randomBirdResponse(state: StoreState = initialState, action: Action): BirdComponentProps {
 	switch (action.type) {
 		case ActionTypeKeys.RECEIVE_RANDOM_BIRD:
-			// console.log('reducing random bird ' + JSON.stringify(action));
-			// return action.payload;
-
-			return {
+			return Object.assign({}, state, {
 				isLoading: false,
 				response: action.payload,
-			};
-
-			// return Object.assign({}, state, {
-			// 	response: action.payload,
-			// 	isLoading: false,
-			// });
+			});
 		case ActionTypeKeys.REQUEST_RANDOM_BIRD:
 			return Object.assign({}, state, {
 				isLoading: true,
+			});
+		case ActionTypeKeys.SET_CURRENT_LANGUAGE:
+			return Object.assign({}, state, {
+				currentLanguage: action.payload,
+			});
+		case ActionTypeKeys.SET_CURRENT_REGION:
+			return Object.assign({}, state, {
+				currentRegion: action.payload,
 			});
 		default:
 			return state;
