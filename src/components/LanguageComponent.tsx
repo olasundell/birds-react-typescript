@@ -33,12 +33,8 @@ class LanguageComponent extends React.Component<LanguageComponentParams, object>
 	change(event: React.FormEvent<HTMLSelectElement>) {
 		const { setCurrentLanguage } = this.props;
 
-		// No longer need to cast to any - hooray for react!
 		const safeSearchTypeValue: string = event.currentTarget.value;
 
-		// console.log(event.currentTarget.value);
-
-		// console.log(safeSearchTypeValue); // in chrome => B
 		const language = this.langMap.get(safeSearchTypeValue);
 
 		if (language) {

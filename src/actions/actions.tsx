@@ -72,8 +72,8 @@ function createUrl(selectedLanguage?: Language, selectedRegion?: Region, sciName
 	let params: URLSearchParams = url.searchParams;
 	// let params: URLSearchParams = new URLSearchParams();
 
-	let lang = selectedLanguage ? selectedLanguage : defaultLanguage;
-	let region = selectedRegion ? selectedRegion : defaultRegion;
+	let lang = selectedLanguage ? selectedLanguage : defaultLanguage();
+	let region = selectedRegion ? selectedRegion : defaultRegion();
 
 	params.set('lang', lang.code);
 	params.set('region', region.code);
@@ -120,6 +120,11 @@ export function fetchLanguages(): (dispatch: Dispatch<StoreState>) => Promise<{}
 }
 
 export function setCurrentLanguage(language: Language): (dispatch: Dispatch<StoreState>) => Promise<{}> {
+	if (language) {
+		localStorage.setItem('currentLanguageCode', language.code);
+		localStorage.setItem('currentLanguageName', language.name);
+	}
+
 	return async (dispatch: Dispatch<StoreState>) => {
 		return dispatch(actionCreators.setCurrentLanguage(language));
 	};
@@ -136,6 +141,12 @@ export function fetchRegions(): (dispatch: Dispatch<StoreState>) => Promise<{}> 
 
 export function setCurrentRegion(region: Region): (dispatch: Dispatch<StoreState>) => Promise<{}> {
 	return async (dispatch: Dispatch<StoreState>) => {
+		if (region) {
+			localStorage.setItem('currentRegionCode', region.code);
+			localStorage.setItem('currentRegionId', String(region.id));
+			localStorage.setItem('currentRegionName', region.name);
+		}
+
 		return dispatch(actionCreators.setCurrentRegion(region));
 	};
 }

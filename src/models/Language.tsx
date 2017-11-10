@@ -3,7 +3,12 @@ export interface Language {
 	code: string;
 }
 
-export const defaultLanguage: Language = {
-	name: 'English',
-	code: 'en_US'
-};
+export function defaultLanguage(): Language {
+	const name = localStorage.getItem('currentLanguageName');
+	const code = localStorage.getItem('currentLanguageCode');
+
+	return {
+		name: name ? name : 'English',
+		code: code ? code : 'en_US'
+	};
+}

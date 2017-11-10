@@ -33,8 +33,8 @@ export const initialState: StoreState = {
 	regions: [],
 	isLoading: false,
 	response: undefined,
-	currentLanguage: defaultLanguage,
-	currentRegion: defaultRegion,
+	currentLanguage: defaultLanguage(),
+	currentRegion: defaultRegion(),
 };
 
 export const rootReducer = combineReducers<StoreState>({
