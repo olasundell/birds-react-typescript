@@ -2,8 +2,8 @@ import { BirdResponse } from '../models/RandomBirdResponse';
 import { createActionCreator } from 'react-redux-typescript/module/create-action-creator';
 import { Dispatch } from 'react-redux';
 import { StoreState } from '../reducers';
-import {defaultLanguage, Language} from '../models/Language';
-import {defaultRegion, Region} from '../models/Region';
+import { defaultLanguage, Language } from '../models/Language';
+import { defaultRegion, Region } from '../models/Region';
 
 // export const REQUEST_RANDOM_BIRD = 'REQUEST_RANDOM_BIRD';
 // export const RECEIVE_BIRD = 'RECEIVE_BIRD';

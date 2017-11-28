@@ -1,1 +1,6 @@
-// class MediaChooserComponent extends React.Component<LanguageComponentParams, object> {
+interface MediaChooserComponentParams {
+
+}
+class MediaChooserComponent extends React.Component<MediaChooserComponentParams, object> {
+
+}

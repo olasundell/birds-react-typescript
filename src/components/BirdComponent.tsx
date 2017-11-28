@@ -63,18 +63,6 @@ class BirdComponent extends React.Component<BirdComponentParams, BirdComponentSt
 		}
 	}
 
-	shouldComponentUpdate(nextProps: BirdComponentParams, nextState: BirdComponentState): boolean {
-		// console.log(`should update ${nextProps.clicked} ${JSON.stringify(nextState)}`);
-		// if (nextState && nextState.correctIndex) {
-		// 	if (!this.state || !this.state.correctIndex) {
-		// 		return false;
-		// 	} else if (this.state.correctIndex !== nextState.correctIndex) {
-		// 		return false;
-		// 	}
-		// }
-		return true;
-	}
-
 	onClick(event: React.MouseEvent<HTMLLIElement>, index: number) {
 		// const safeSearchTypeValue: string = event.currentTarget.value;
 
@@ -91,12 +79,6 @@ class BirdComponent extends React.Component<BirdComponentParams, BirdComponentSt
 			this.setState({
 				clicked: true
 			});
-			// this.setState((prevState, props) => {
-			// 	return {
-			// 		...props,
-			// 		clicked: true
-			// 	};
-			// });
 		}
 	}
 
