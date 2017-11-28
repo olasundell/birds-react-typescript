@@ -83,13 +83,17 @@ class BirdComponent extends React.Component<BirdComponentParams, BirdComponentSt
 	}
 
 	correctAndClicked(index: number): string {
+		const cls: string = 'list-group-item list-group-item-action';
+
 		if (this.state && this.state.clicked) {
 			if (this.state.correctIndex === index) {
-				return 'correct';
+				return cls + ' active';
+			} else {
+				return cls + ' disabled';
 			}
 		}
 
-		return '';
+		return cls;
 	}
 
 	render() {
@@ -110,8 +114,13 @@ class BirdComponent extends React.Component<BirdComponentParams, BirdComponentSt
 		return (
 			<div>
 				<MediaComponent mediaType={response.media.mediaType} url={response.media.url}/>
-				<ul>
-					{response.genusBirds.map((b, i) => <li onClick={(e) => this.onClick(e, i)} key={i} className={this.correctAndClicked(i)}>{b.name}</li>)} </ul>
+				<ul className="list-group">
+					{response.genusBirds.map((b, i) =>
+						<li onClick={(e) => this.onClick(e, i)} key={i} className={this.correctAndClicked(i)}>
+							{b.name}
+						</li>
+					)}
+				</ul>
 			</div>
 		);
 	}
