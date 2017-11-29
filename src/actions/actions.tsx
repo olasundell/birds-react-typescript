@@ -1,5 +1,4 @@
 import { BirdResponse } from '../models/RandomBirdResponse';
-import { createActionCreator } from 'react-redux-typescript/module/create-action-creator';
 import { Dispatch } from 'react-redux';
 import { StoreState } from '../reducers';
 import { defaultLanguage, Language } from '../models/Language';
@@ -20,42 +19,50 @@ export enum ActionTypeKeys {
 	SET_CURRENT_REGION = 'SET_CURRENT_REGION',
 }
 
-export const actionCreators = {
-	requestRandomBird: createActionCreator(ActionTypeKeys.REQUEST_RANDOM_BIRD),
-	requestSpecificBird: createActionCreator(ActionTypeKeys.REQUEST_SPECIFIC_BIRD),
-	receiveBird: createActionCreator(ActionTypeKeys.RECEIVE_BIRD, (state: BirdResponse) => {
-		return state;
-	}),
-	randomBirdError: createActionCreator(ActionTypeKeys.RANDOM_BIRD_ERROR),
+class RequestRandomBird {
+	readonly type = ActionTypeKeys.REQUEST_RANDOM_BIRD;
+}
 
-	requestLanguages: createActionCreator(ActionTypeKeys.REQUEST_LANGUAGES),
-	receiveLanguages: createActionCreator(ActionTypeKeys.RECEIVE_LANGUAGES, (state: Language[]) => { return state; }),
-	setCurrentLanguage: createActionCreator(ActionTypeKeys.SET_CURRENT_LANGUAGE, (state: Language) => { return state; }),
+class RequestSpecificBird {
+	readonly type = ActionTypeKeys.REQUEST_SPECIFIC_BIRD;
+}
 
-	requestRegions: createActionCreator(ActionTypeKeys.REQUEST_REGIONS),
-	receiveRegions: createActionCreator(ActionTypeKeys.RECEIVE_REGIONS, (state: Region[]) => { return state; }),
-	setCurrentRegion: createActionCreator(ActionTypeKeys.SET_CURRENT_REGION, (state: Region) => { return state; })
-};
+class ReceiveBird {
+	readonly type = ActionTypeKeys.RECEIVE_BIRD;
+	constructor(public payload: BirdResponse) {}
+}
 
-type S<T> = { response: T };
+class RequestLanguages {
+	readonly type = ActionTypeKeys.REQUEST_LANGUAGES;
+}
 
-type QRandomBirdResponse = S<{ randomBirdResponse: BirdResponse }>;
-type QLanguagesResponse = S<{ languages: Language[] }>;
-type QLanguageResponse = S<{ currentLanguage: Language }>;
-type QRegionsResponse = S<{ regions: Region[] }>;
-type QRegionResponse = S<{ region: Region }>;
+class ReceiveLanguages {
+	readonly type = ActionTypeKeys.RECEIVE_LANGUAGES;
+	constructor(public payload: Language[]) {}
+}
 
-export type Action = ({ type: ActionTypeKeys.REQUEST_RANDOM_BIRD }) |
-	({ type: ActionTypeKeys.REQUEST_SPECIFIC_BIRD}) |
-	({ type: ActionTypeKeys.RECEIVE_BIRD, payload: BirdResponse} & QRandomBirdResponse) |
-	({ type: ActionTypeKeys.RANDOM_BIRD_ERROR, error: string }) |
-	({ type: ActionTypeKeys.REQUEST_LANGUAGES }) |
-	({ type: ActionTypeKeys.RECEIVE_LANGUAGES, payload: Language[] }  & QLanguagesResponse) |
-	({ type: ActionTypeKeys.SET_CURRENT_LANGUAGE, payload: Language }  & QLanguageResponse) |
-	({ type: ActionTypeKeys.REQUEST_REGIONS}) |
-	({ type: ActionTypeKeys.RECEIVE_REGIONS, payload: Region[]} & QRegionsResponse) |
-	({ type: ActionTypeKeys.SET_CURRENT_REGION, payload: Region}  & QRegionResponse)
-	;
+class SetCurrentLanguage {
+	readonly type = ActionTypeKeys.SET_CURRENT_LANGUAGE;
+	constructor(public payload: Language) {}
+}
+
+class RequestRegions {
+	readonly type = ActionTypeKeys.REQUEST_REGIONS;
+}
+
+class ReceiveRegions {
+	readonly type = ActionTypeKeys.RECEIVE_REGIONS;
+	constructor(public payload: Region[]) {}
+}
+
+class SetCurrentRegion {
+	readonly type = ActionTypeKeys.SET_CURRENT_REGION;
+	constructor(public payload: Region) {}
+}
+
+export type Action = RequestRandomBird | RequestSpecificBird | ReceiveBird |
+	RequestLanguages | ReceiveLanguages | SetCurrentLanguage |
+	RequestRegions | ReceiveRegions | SetCurrentRegion;
 
 function createUrl(selectedLanguage?: Language, selectedRegion?: Region, sciName?: string): string {
 	let url: URL = new URL('http://localhost:8080/random');
@@ -78,34 +85,35 @@ function createUrl(selectedLanguage?: Language, selectedRegion?: Region, sciName
 export function fetchSpecificBird(sciName: string, selectedLanguage: Language, selectedRegion: Region):
 			(dispatch: Dispatch<StoreState>) => Promise<{}> {
 
-	console.log(`Fetching specific bird ${sciName}`);
+	// console.log(`Fetching specific bird ${sciName}`);
 	return async (dispatch: Dispatch<StoreState>) => {
-		dispatch(actionCreators.requestSpecificBird());
+		// dispatch(actionCreators.requestSpecificBird());
+		dispatch(new RequestSpecificBird());
 		let url: string = createUrl(selectedLanguage, selectedRegion, sciName);
 
 		return fetch(url)
 			.then(response => response.json())
-			.then(json => dispatch(actionCreators.receiveBird(json)));
+			.then(json => dispatch(new ReceiveBird(json)));
 	};
 }
 
 export function fetchRandomBird(selectedLanguage: Language,
 								selectedRegion: Region): (dispatch: Dispatch<StoreState>) => Promise<{}> {
 	return async (dispatch: Dispatch<StoreState>) => {
-		dispatch(actionCreators.requestRandomBird());
+		dispatch(new RequestRandomBird());
 		let url = createUrl(selectedLanguage, selectedRegion);
 		return fetch(url)
 			.then(response => response.json())
-			.then(json => dispatch(actionCreators.receiveBird(json)));
+			.then(json => dispatch(new ReceiveBird(json)));
 	};
 }
 
 export function fetchLanguages(): (dispatch: Dispatch<StoreState>) => Promise<{}> {
 	return async (dispatch: Dispatch<StoreState>) => {
-		dispatch(actionCreators.requestLanguages());
+		dispatch(new RequestLanguages());
 		return fetch('http://localhost:8080/languages')
 			.then(response => response.json())
-			.then(json => dispatch(actionCreators.receiveLanguages(json)));
+			.then(json => dispatch(new ReceiveLanguages(json)));
 	};
 }
 
@@ -116,16 +124,16 @@ export function setCurrentLanguage(language: Language): (dispatch: Dispatch<Stor
 	}
 
 	return async (dispatch: Dispatch<StoreState>) => {
-		return dispatch(actionCreators.setCurrentLanguage(language));
+		return dispatch(new SetCurrentLanguage(language));
 	};
 }
 
 export function fetchRegions(): (dispatch: Dispatch<StoreState>) => Promise<{}> {
 	return async (dispatch: Dispatch<StoreState>) => {
-		dispatch(actionCreators.requestRegions());
+		dispatch(new RequestRegions());
 		return fetch('http://localhost:8080/regions')
 			.then(response => response.json())
-			.then(json => dispatch(actionCreators.receiveRegions(json)));
+			.then(json => dispatch(new ReceiveRegions(json)));
 	};
 }
 
@@ -137,6 +145,6 @@ export function setCurrentRegion(region: Region): (dispatch: Dispatch<StoreState
 			localStorage.setItem('currentRegionName', region.name);
 		}
 
-		return dispatch(actionCreators.setCurrentRegion(region));
+		return dispatch(new SetCurrentRegion(region));
 	};
 }
