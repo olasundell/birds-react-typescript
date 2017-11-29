@@ -15,8 +15,6 @@ import { Language } from './models/Language';
 import { Region } from './models/Region';
 
 export interface AppProps {
-	isLoading: boolean;
-	response: BirdResponse;
 	fetchRandomBird(): (dispatch: Dispatch<StoreState>) => Promise<BirdResponse>;
 	fetchLanguages(): (dispatch: Dispatch<StoreState>) => Promise<Language[]>;
 	fetchRegions(): (dispatch: Dispatch<StoreState>) => Promise<Region[]>;
@@ -43,8 +41,6 @@ class App extends React.Component<AppProps> {
 
 function mapStateToProps(state: StoreState) {
 	return {
-		isLoading: state.isLoading,
-		response: state.response
 	};
 }
 

@@ -61,12 +61,12 @@ class LanguageComponent extends React.Component<LanguageComponentParams, object>
 	}
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: StoreState): LanguageComponentProps {
 	// console.log(JSON.stringify(state));
 	return {
-		languages: state.languageResponse.languages,
-		isLoading: state.languageResponse.isLoading,
-		currentLanguage: state.languageResponse.currentLanguage,
+		languages: state.language.languages,
+		isLoading: state.language.isLoading,
+		currentLanguage: state.language.currentLanguage,
 	};
 }
 

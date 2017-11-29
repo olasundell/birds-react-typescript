@@ -126,12 +126,12 @@ class BirdComponent extends React.Component<BirdComponentParams, BirdComponentSt
 	}
 }
 
-function mapStateToProps(state: any): BirdComponentProps {
+function mapStateToProps(state: StoreState): BirdComponentProps {
 	return {
-		isLoading: state.randomBirdResponse.isLoading,
-		response: state.randomBirdResponse.response,
-		currentLanguage: state.randomBirdResponse.currentLanguage,
-		currentRegion: state.randomBirdResponse.currentRegion
+		isLoading: state.bird.isLoading,
+		response: state.bird.response,
+		currentLanguage: state.bird.currentLanguage,
+		currentRegion: state.bird.currentRegion
 	};
 }
 

@@ -5,16 +5,6 @@ import { StoreState } from '../reducers';
 import { defaultLanguage, Language } from '../models/Language';
 import { defaultRegion, Region } from '../models/Region';
 
-// export const REQUEST_RANDOM_BIRD = 'REQUEST_RANDOM_BIRD';
-// export const RECEIVE_BIRD = 'RECEIVE_BIRD';
-// export const RANDOM_BIRD_ERROR = 'RANDOM_BIRD_ERROR';
-//
-// export const REQUEST_LANGUAGES = 'REQUEST_LANGUAGES';
-// export const RECEIVE_LANGUAGES = 'RECEIVE_LANGUAGES';
-//
-// export const REQUEST_REGIONS = 'REQUEST_REGIONS';
-// export const RECEIVE_REGIONS = 'RECEIVE_REGIONS';
-
 export enum ActionTypeKeys {
 	REQUEST_RANDOM_BIRD = 'REQUEST_RANDOM_BIRD',
 	REQUEST_SPECIFIC_BIRD = 'REQUEST_SPECIFIC_BIRD',

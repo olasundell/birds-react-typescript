@@ -1,8 +1,18 @@
-import { initialState, StoreState } from './index';
 import { Action, ActionTypeKeys } from '../actions/actions';
 import { LanguageComponentProps } from '../components/LanguageComponent';
+import { defaultLanguage } from '../models/Language';
 
-export default function languageResponse(state: StoreState = initialState, action: Action): LanguageComponentProps {
+export interface LanguageReducer {
+	language: LanguageComponentProps;
+}
+
+const initialState: LanguageComponentProps = {
+	languages: [],
+	currentLanguage: defaultLanguage(),
+	isLoading: false
+};
+
+export default function languageReducer(state: LanguageComponentProps = initialState, action: Action): LanguageComponentProps {
 	switch (action.type) {
 		case ActionTypeKeys.RECEIVE_LANGUAGES:
 			return Object.assign({}, state, {

@@ -1,28 +1,43 @@
 import { Action, ActionTypeKeys } from '../actions/actions';
-import { initialState, StoreState } from './index';
 import { BirdComponentProps } from '../components/BirdComponent';
+import { defaultLanguage } from '../models/Language';
+import { defaultRegion } from '../models/Region';
 
-// const initialState: Response = {
-export default function randomBirdResponse(state: StoreState = initialState, action: Action): BirdComponentProps {
+export interface BirdReducer {
+	bird: BirdComponentProps;
+}
+
+const initialState: BirdComponentProps = {
+	currentLanguage: defaultLanguage(),
+	currentRegion: defaultRegion(),
+	isLoading: false,
+	response: undefined,
+};
+
+export function randomBirdReducer(state: BirdComponentProps = initialState, action: Action): BirdComponentProps {
 	switch (action.type) {
 		case ActionTypeKeys.RECEIVE_BIRD:
-			return Object.assign({}, state, {
+			return {
+				...state,
 				isLoading: false,
-				response: action.payload,
-			});
+				response: action.payload
+			};
 		case ActionTypeKeys.REQUEST_RANDOM_BIRD:
 		case ActionTypeKeys.REQUEST_SPECIFIC_BIRD:
-			return Object.assign({}, state, {
+			return {
+				...state,
 				isLoading: true,
-			});
+			};
 		case ActionTypeKeys.SET_CURRENT_LANGUAGE:
-			return Object.assign({}, state, {
+			return {
+				...state,
 				currentLanguage: action.payload,
-			});
+			};
 		case ActionTypeKeys.SET_CURRENT_REGION:
-			return Object.assign({}, state, {
+			return {
+				...state,
 				currentRegion: action.payload,
-			});
+			};
 		default:
 			return state;
 	}

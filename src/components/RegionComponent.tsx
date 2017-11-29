@@ -68,12 +68,12 @@ class RegionComponent extends React.Component<RegionComponentParams, object> {
 	}
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: StoreState): RegionComponentProps {
 	// console.log(JSON.stringify(state));
 	return {
-		regions: state.regionResponse.regions,
-		isLoading: state.regionResponse.isLoading,
-		currentRegion: state.regionResponse.currentRegion,
+		regions: state.region.regions,
+		isLoading: state.region.isLoading,
+		currentRegion: state.region.currentRegion,
 	};
 }
 
